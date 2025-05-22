@@ -57,4 +57,19 @@ const addBookToReadingList = async (body) => {
   }
 };
 
-module.exports = { createBook, getBooks, addBookToReadingList };
+const updateABook = async (bookId, body) => {
+  try {
+    const bookObj = await BookModel.findOne({ where: { id: bookId } });
+
+    if (!bookObj) return {};
+
+    bookObj.set(body);
+    await bookObj.save();
+
+    return { message: "Book details updated successfully", book: bookObj };
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = { createBook, getBooks, addBookToReadingList, updateABook };

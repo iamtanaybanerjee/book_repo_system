@@ -6,6 +6,7 @@ const {
   createBook,
   getBooks,
   addBookToReadingList,
+  updateABook,
 } = require("../services/bookServices");
 
 const addBook = async (req, res) => {
@@ -58,4 +59,21 @@ const addToReadingList = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
-module.exports = { addBook, searchBooks, addToReadingList };
+
+const updateBook = async (req, res) => {
+  const bookId = parseInt(req.params.bookId);
+  const body = req.body;
+  try {
+    const response = await updateABook(bookId, body);
+
+    if (!response.message)
+      return res.status(404).json({ error: "Book not found" });
+
+    return res
+      .status(200)
+      .json({ message: response.message, book: response.book });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+module.exports = { addBook, searchBooks, addToReadingList, updateBook };
