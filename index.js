@@ -8,6 +8,7 @@ const {
   searchBooks,
   addToReadingList,
   updateBook,
+  getReadingList,
 } = require("./controllers/bookControllers");
 
 const app = express();
@@ -20,6 +21,7 @@ app.post("/api/books", addBook);
 app.get("/api/books/search", searchBooks);
 app.post("/api/reading-list", addToReadingList);
 app.post("/api/books/:bookId", updateBook);
+app.get("/api/reading-list/:userId", getReadingList);
 
 sequelize
   .authenticate()

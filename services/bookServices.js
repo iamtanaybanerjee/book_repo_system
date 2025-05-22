@@ -72,4 +72,46 @@ const updateABook = async (bookId, body) => {
   }
 };
 
-module.exports = { createBook, getBooks, addBookToReadingList, updateABook };
+const getUserReadingList = async (userId) => {
+  try {
+    const userObj = await UserModel.findOne({ where: { id: userId } });
+
+    if (!userObj) return {};
+
+    const readingListArray = await ReadingListModel.findAll({
+      where: { userId },
+    });
+
+    const readingList = [];
+
+    for (let i = 0; i < readingListArray.length; i++) {
+      const bookDetails = await getBookDetails(readingListArray[i].bookId);
+
+      readingList.push({
+        ...readingListArray[i].dataValues,
+        book: bookDetails,
+      });
+    }
+
+    return { message: "readingList", readingList };
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getBookDetails = async (id) => {
+  try {
+    const bookObj = await BookModel.findOne({ where: { id } });
+    return bookObj;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = {
+  createBook,
+  getBooks,
+  addBookToReadingList,
+  updateABook,
+  getUserReadingList,
+};
