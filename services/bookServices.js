@@ -108,10 +108,27 @@ const getBookDetails = async (id) => {
   }
 };
 
+const deleteBookFromReadingList = async (id) => {
+  try {
+    // const readingListObj = await ReadingListModel.findOne({where: {id}});
+
+    // if(!readingListObj) return {};
+
+    const response = await ReadingListModel.destroy({ where: { id } });
+
+    if (response === 0) return {};
+
+    return { message: "Book removed successfully" };
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createBook,
   getBooks,
   addBookToReadingList,
   updateABook,
   getUserReadingList,
+  deleteBookFromReadingList,
 };

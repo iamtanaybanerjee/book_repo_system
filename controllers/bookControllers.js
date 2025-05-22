@@ -8,6 +8,7 @@ const {
   addBookToReadingList,
   updateABook,
   getUserReadingList,
+  deleteBookFromReadingList,
 } = require("../services/bookServices");
 
 const addBook = async (req, res) => {
@@ -83,10 +84,26 @@ const getReadingList = async (req, res) => {
   try {
     const response = await getUserReadingList(userId);
 
-    if (!response.message)
-      return res.status(400).json({ error: "user id does not exist" });
+    if (!response.message || response.readingList.length === 0)
+      return res
+        .status(400)
+        .json({ error: "user id does not exist or no books in reading-list" });
 
     return res.status(200).json({ readingList: response.readingList });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+const removeBookFromReadingList = async (req, res) => {
+  const readingListId = parseInt(req.params.readingListId);
+  try {
+    const response = await deleteBookFromReadingList(readingListId);
+
+    if (!response.message)
+      return res.status(404).json({ error: "Reading list entry not found" });
+
+    return res.status(200).json({ message: response.message });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -97,4 +114,5 @@ module.exports = {
   addToReadingList,
   updateBook,
   getReadingList,
+  removeBookFromReadingList,
 };
